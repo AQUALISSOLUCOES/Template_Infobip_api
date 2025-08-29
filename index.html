@@ -31,7 +31,7 @@
     font-weight: 600;
     color: #555555;
   }
-  input[type=text], select {
+  input[type=text], input[type=password], select {
     width: 100%;
     padding: 12px 10px;
     margin-bottom: 20px;
@@ -41,7 +41,7 @@
     box-sizing: border-box;
     transition: 0.3s;
   }
-  input[type=text]:focus, select:focus {
+  input[type=text]:focus, input[type=password]:focus, select:focus {
     border-color: #25d366;
     outline: none;
   }
@@ -66,6 +66,9 @@
 <div class="container">
   <h1>Enviar Mensagem de Modelo do WhatsApp</h1>
   <form id="whatsappForm">
+    <label for="secret">API Secret:</label>
+    <input type="password" id="secret" name="secret" placeholder="Digite sua API Key" required>
+
     <label for="to">Número destinatário:</label>
     <input type="text" id="to" name="to" value="556200000000" required>
 
@@ -86,6 +89,7 @@
 document.getElementById('whatsappForm').addEventListener('submit', function(event) {
   event.preventDefault();
 
+  const secret = document.getElementById('secret').value;
   const from = "556298280088";
   const to = document.getElementById('to').value;
   const templateName = document.getElementById('template').value;
@@ -133,7 +137,7 @@ document.getElementById('whatsappForm').addEventListener('submit', function(even
   fetch('https://1gd69n.api.infobip.com/whatsapp/1/message/template', {
     method: 'POST',
     headers: {
-      'Authorization': 'App 394d3c54fd3f1a963c3b0dea817bc288-0f381dc7-81c7-4396-a103-87d4a261cdb7',
+      'Authorization': 'App ' + secret,
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(body)
