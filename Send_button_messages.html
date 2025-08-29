@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enviar Mensagem de Modelo WhatsApp</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f5f6fa;
+    margin: 0;
+    padding: 0;
+  }
+  .container {
+    max-width: 500px;
+    margin: 50px auto;
+    background: #ffffff;
+    padding: 30px 25px;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  }
+  h1 {
+    font-size: 1.5em;
+    color: #333333;
+    margin-bottom: 25px;
+    text-align: center;
+  }
+  label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #555555;
+  }
+  input[type=text], select {
+    width: 100%;
+    padding: 12px 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1em;
+    box-sizing: border-box;
+    transition: 0.3s;
+  }
+  input[type=text]:focus, select:focus {
+    border-color: #25d366;
+    outline: none;
+  }
+  button {
+    width: 100%;
+    background-color: #25d366;
+    color: white;
+    border: none;
+    padding: 14px;
+    font-size: 1em;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  button:hover {
+    background-color: #1ebe5c;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Enviar Mensagem de Modelo do WhatsApp</h1>
+  <form id="whatsappForm">
+    <label for="to">Número destinatário:</label>
+    <input type="text" id="to" name="to" value="556200000000" required>
+
+    <label for="template">Nome do modelo:</label>
+    <select id="template" name="template" required>
+      <option value="novo_contato_button">Novo Contato</option>
+      <option value="retomar_contato_novo__fixo_utilitario_175f36">Retomar contato</option>
+    </select>
+
+    <label for="placeholder">Texto da mensagem:</label>
+    <input type="text" id="placeholder" name="placeholder" value="Nayara" required>
+
+    <button type="submit">Enviar Mensagem</button>
+  </form>
+</div>
+
+<script>
+document.getElementById('whatsappForm').addEventListener('submit', function(event) {
+  event.preventDefault();
+
+  const from = "556298280088";
+  const to = document.getElementById('to').value;
+  const templateName = document.getElementById('template').value;
+  const placeholderText = document.getElementById('placeholder').value;
+
+  let templateData = {
+    body: { placeholders: [placeholderText] }
+  };
+
+  if (templateName === "retomar_contato_novo__fixo_utilitario_175f36") {
+    templateData.buttons = [
+      {
+        type: "QUICK_REPLY",
+        text: "Iniciar atendimento",
+        parameter: "Iniciar atendimento"
+      }
+    ];
+  }
+
+  if (templateName === "novo_contato_button") {
+    templateData.buttons = [
+      {
+        type: "QUICK_REPLY",
+        text: "Liberar chat",
+        parameter: "Liberar chat"
+      }
+    ];
+  }
+
+  const body = {
+    messages: [
+      {
+        from: from,
+        to: to,
+        messageId: crypto.randomUUID(),
+        content: {
+          templateName: templateName,
+          templateData: templateData,
+          language: "pt_BR"
+        }
+      }
+    ]
+  };
+
+  fetch('https://1gd69n.api.infobip.com/whatsapp/1/message/template', {
+    method: 'POST',
+    headers: {
+      'Authorization': 'App 394d3c54fd3f1a963c3b0dea817bc288-0f381dc7-81c7-4396-a103-87d4a261cdb7',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(body)
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log(data);
+    alert('Mensagem enviada! Veja o console para detalhes.');
+  })
+  .catch(error => {
+    console.error('Erro:', error);
+    alert('Erro ao enviar mensagem.');
+  });
+});
+</script>
+
+</body>
+</html>
